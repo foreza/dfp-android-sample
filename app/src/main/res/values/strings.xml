@@ -3,4 +3,7 @@
     <string name="preload">Preload</string>
     <string name="show">Show</string>
     <string name="interstitial_test">Interstitial Test</string>
+    <string name="imab_interstitial_test">IMAB Interstitial Test</string>
+    <string name="dfp_test_interstitial_text">DFP Test Interstitial</string>
+    <string name="imab_interstitial_test_imab_text">IMAB Interstitial Test</string>
 </resources>

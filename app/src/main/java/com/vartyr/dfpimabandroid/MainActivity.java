@@ -3,15 +3,27 @@ package com.vartyr.dfpimabandroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
+
+import com.inmobi.ads.InMobiAudienceBidder;
+import com.inmobi.plugin.dfp.IMAudienceBidder;
 
 public class MainActivity extends Activity {
 
     private PublisherAdView mPublisherAdView;
+
+    public Boolean bannerLoaded = false;
+
+
+    private IMAudienceBidder.BidToken bannerBidToken;
+
 
 
     @Override
@@ -19,13 +31,110 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        configureAndLoadAdView();
+
+        initSDK();
+        // configureAndLoadAdView();
+
+        imabBannerRequest();
 
     }
 
-    public void nav_buttonInterstitialActivity(View view){
-        startActivity(new Intent(this, InterstitialActivity.class));
+
+    public void initSDK() {
+
+        // Init DFP SDK
+        MobileAds.initialize(this);
+
+        // Init IMAB SDK
+        InMobiAudienceBidder.initialize(this, "1017084");
+
     }
+
+
+
+
+    public void imabBannerRequest() {
+
+
+        mPublisherAdView = findViewById(R.id.publisherAdView);
+
+        PublisherAdRequest.Builder IMABadRequest = new PublisherAdRequest.Builder();
+
+
+        // Get singleton instance
+        IMAudienceBidder inMobiAudienceBidder = IMAudienceBidder.getInstance();
+
+        bannerBidToken = inMobiAudienceBidder.createBidToken(this, "1055520", IMABadRequest, 320, 50, new IMAudienceBidder.IMAudienceBidderBannerListener() {
+            @Override
+            public void onBidReceived(PublisherAdRequest.Builder builder) {
+
+                Toast.makeText(MainActivity.this,"IMAb Banner onBidReceived", Toast.LENGTH_LONG).show();
+
+
+                if (!bannerLoaded) {
+
+                    Toast.makeText(MainActivity.this,"IMAb Banner not yet loaded, loading into view", Toast.LENGTH_LONG).show();
+
+                    PublisherAdRequest publisherAdRequest = builder.build();
+
+                    mPublisherAdView.setAdListener(new AdListener() {
+                        @Override
+                        public void onAdLoaded() {
+                            // Code to be executed when an ad finishes loading.
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(int errorCode) {
+                            // Code to be executed when an ad request fails.
+                        }
+
+                        @Override
+                        public void onAdOpened() {
+                            // Code to be executed when an ad opens an overlay that
+                            // covers the screen.
+                        }
+
+                        @Override
+                        public void onAdClicked() {
+                            // Code to be executed when the user clicks on an ad.
+                        }
+
+                        @Override
+                        public void onAdLeftApplication() {
+                            // Code to be executed when the user has left the app.
+                        }
+
+                        @Override
+                        public void onAdClosed() {
+                            // Code to be executed when the user is about to return
+                            // to the app after tapping on an ad.
+                        }
+                    });
+
+                    mPublisherAdView.loadAd(publisherAdRequest);
+
+                }
+
+            }
+
+            @Override
+            public void onBidFailed(PublisherAdRequest.Builder builder, Error error) {
+
+                Toast.makeText(MainActivity.this,"IMAb Banner onBidFailed", Toast.LENGTH_LONG).show();
+
+                mPublisherAdView.loadAd(builder.build());
+
+
+
+            }
+        });
+
+        bannerBidToken.updateBid();
+
+    }
+
+
+
 
 
     public void configureAndLoadAdView(){
@@ -70,6 +179,20 @@ public class MainActivity extends Activity {
         });
 
     }
+
+
+
+
+
+    public void nav_Interstitial(View view){
+        startActivity(new Intent(this, InterstitialActivity.class));
+    }
+
+
+    public void nav_IMABInterstitial(View view){
+        startActivity(new Intent(this, InterstitialActivity.class));
+    }
+
 
 
 }
