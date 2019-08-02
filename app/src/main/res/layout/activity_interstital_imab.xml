@@ -7,7 +7,7 @@
     tools:context=".InterstitalIMABActivity">
 
     <Button
-        android:id="@+id/buttonPreloadInterstitial2"
+        android:id="@+id/buttonPreloadIMABInterstitial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -16,14 +16,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:onClick="buttonPreloadIMABInterstitial"
-        android:text="@string/preload"
-        app:layout_constraintBottom_toTopOf="@+id/buttonShowInterstitial2"
+        android:text="Preload IMAB"
+        app:layout_constraintBottom_toTopOf="@+id/buttonShowIMABInterstitial"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonShowInterstitial2"
+        android:id="@+id/buttonShowIMABInterstitial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -32,7 +32,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:onClick="buttonShowIMABInterstitial"
-        android:text="@string/show"
+        android:text="Show IMAB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

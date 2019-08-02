@@ -17,9 +17,8 @@ import com.inmobi.plugin.dfp.IMAudienceBidder;
 
 public class MainActivity extends Activity {
 
-    private PublisherAdView mPublisherAdView;
-
-    public Boolean bannerLoaded = false;
+    private PublisherAdView mPublisherAdView;                       // Keep a reference to the adView
+    private Boolean bannerLoaded = false;                           // for banner refresh
 
 
     private IMAudienceBidder.BidToken bannerBidToken;
@@ -35,7 +34,7 @@ public class MainActivity extends Activity {
         initSDK();
         // configureAndLoadAdView();
 
-        imabBannerRequest();
+//         imabBannerRequest();
 
     }
 
@@ -44,6 +43,9 @@ public class MainActivity extends Activity {
 
         // Init DFP SDK
         MobileAds.initialize(this);
+
+
+
 
         // Init IMAB SDK
         InMobiAudienceBidder.initialize(this, "1017084");
@@ -60,13 +62,17 @@ public class MainActivity extends Activity {
 
         PublisherAdRequest.Builder IMABadRequest = new PublisherAdRequest.Builder();
 
+        // Test Device ID
+        IMABadRequest.addTestDevice("DBA220EA435766BFB9DFB4CC7B7673A8");
+
 
         // Get singleton instance
         IMAudienceBidder inMobiAudienceBidder = IMAudienceBidder.getInstance();
 
-        bannerBidToken = inMobiAudienceBidder.createBidToken(this, "1055520", IMABadRequest, 320, 50, new IMAudienceBidder.IMAudienceBidderBannerListener() {
+
+            bannerBidToken = inMobiAudienceBidder.createBidToken(this, "1055520", IMABadRequest, 320, 50, new IMAudienceBidder.IMAudienceBidderBannerListener() {
             @Override
-            public void onBidReceived(PublisherAdRequest.Builder builder) {
+            public void onBidReceived(@NonNull  PublisherAdRequest.Builder builder) {
 
                 Toast.makeText(MainActivity.this,"IMAb Banner onBidReceived", Toast.LENGTH_LONG).show();
 
@@ -81,11 +87,17 @@ public class MainActivity extends Activity {
                         @Override
                         public void onAdLoaded() {
                             // Code to be executed when an ad finishes loading.
+
+                            Toast.makeText(MainActivity.this,"IMAb Banner onAdLoaded", Toast.LENGTH_LONG).show();
+
+
                         }
 
                         @Override
                         public void onAdFailedToLoad(int errorCode) {
                             // Code to be executed when an ad request fails.
+
+                            Toast.makeText(MainActivity.this,"IMAb Banner onAdFailedToLoad with error: " + errorCode, Toast.LENGTH_LONG).show();
                         }
 
                         @Override
@@ -97,6 +109,10 @@ public class MainActivity extends Activity {
                         @Override
                         public void onAdClicked() {
                             // Code to be executed when the user clicks on an ad.
+
+                            Toast.makeText(MainActivity.this,"IMAb Banner onAdClicked", Toast.LENGTH_LONG).show();
+
+
                         }
 
                         @Override
@@ -190,7 +206,7 @@ public class MainActivity extends Activity {
 
 
     public void nav_IMABInterstitial(View view){
-        startActivity(new Intent(this, InterstitialActivity.class));
+        startActivity(new Intent(this, InterstitalIMABActivity.class));
     }
 
 

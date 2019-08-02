@@ -12,7 +12,7 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 import com.inmobi.plugin.dfp.IMAudienceBidder;
 
-public class InterstitalIMABActivity extends Activity {
+public class InterstitalIMABKWActivity extends Activity {
 
     private PublisherInterstitialAd mPublisherIMABInterstitialAd;
     private Boolean interstitialReady = false;
@@ -47,14 +47,14 @@ public class InterstitalIMABActivity extends Activity {
             @Override
             public void onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
-                Toast.makeText(InterstitalIMABActivity.this,"IMAB Interstitial preload ready", Toast.LENGTH_LONG).show();
+                Toast.makeText(InterstitalIMABKWActivity.this,"IMAB Interstitial preload ready", Toast.LENGTH_LONG).show();
                 interstitialReady = true;
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
 
-                Toast.makeText(InterstitalIMABActivity.this,"Interstitial failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(InterstitalIMABKWActivity.this,"Interstitial failed", Toast.LENGTH_LONG).show();
 
                 // Code to be executed when an ad request fails.
 
@@ -106,7 +106,7 @@ public class InterstitalIMABActivity extends Activity {
             @Override
             public void onBidReceived(@NonNull PublisherAdRequest.Builder builder) {
 
-                Toast.makeText(InterstitalIMABActivity.this,"IMAb Interstitial onBidReceived", Toast.LENGTH_LONG).show();
+                Toast.makeText(InterstitalIMABKWActivity.this,"IMAb Interstitial onBidReceived", Toast.LENGTH_LONG).show();
 
                 PublisherAdRequest publisherAdRequest = builder.build();
 
@@ -116,7 +116,7 @@ public class InterstitalIMABActivity extends Activity {
             @Override
             public void onBidFailed(@NonNull PublisherAdRequest.Builder builder, @NonNull Error error) {
 
-                Toast.makeText(InterstitalIMABActivity.this,"IMAb Banner onBidFailed", Toast.LENGTH_LONG).show();
+                Toast.makeText(InterstitalIMABKWActivity.this,"IMAb Banner onBidFailed", Toast.LENGTH_LONG).show();
 
                 mPublisherIMABInterstitialAd.loadAd(builder.build());
 

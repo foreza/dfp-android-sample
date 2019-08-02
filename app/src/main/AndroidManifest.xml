@@ -16,16 +16,21 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config">
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".InterstitalIMABActivity"
             android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".InterstitalIMABKWActivity"
+            android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".InterstitialActivity"
-            android:parentActivityName=".MainActivity"></activity> <!-- Declare that this is an Ad manager app -->
+            android:parentActivityName=".MainActivity"></activity>
+
+        <!-- Declare that this is an Ad manager app -->
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
