@@ -303,6 +303,10 @@ public class MainActivity extends Activity {
         startActivity(new Intent(this, InterstitalIMABActivity.class));
     }
 
+    public void nav_IMABKWInterstitial(View view){
+        startActivity(new Intent(this, InterstitalIMABKWActivity.class));
+    }
+
 
 
 }

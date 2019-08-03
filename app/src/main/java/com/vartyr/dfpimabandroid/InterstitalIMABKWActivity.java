@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
+import com.inmobi.plugin.dfp.IMABCustomEventInterstitial;
 import com.inmobi.plugin.dfp.IMAudienceBidder;
 
 public class InterstitalIMABKWActivity extends Activity {
@@ -18,12 +20,17 @@ public class InterstitalIMABKWActivity extends Activity {
     private Boolean interstitialReady = false;
     private IMAudienceBidder.BidToken interstitialBidToken;
 
+
+    private PublisherAdRequest.Builder IMABKWBadRequest;               // Used  by KW route
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interstital_imab);
 
-        configureIMABInterstitial();
+        configureIMABKWInterstitial();
+
+        ((TextView)findViewById(R.id.imab_mode)).setText("IMAB KW Test Activity");
 
     }
 
@@ -31,14 +38,15 @@ public class InterstitalIMABKWActivity extends Activity {
     // Touch events
 
     public void buttonPreloadIMABInterstitial(View view) {
-        preloadIMABInterstitial();
+        preloadIMABKWInterstitial();
     }
 
     public void buttonShowIMABInterstitial(View view) {
-        showIMABInterstitial();
+        showIMABKWInterstitial();
     }
 
-    public void configureIMABInterstitial() {
+    public void configureIMABKWInterstitial() {
+
 
         mPublisherIMABInterstitialAd = new PublisherInterstitialAd(this);
         mPublisherIMABInterstitialAd.setAdUnitId("/82109981/ca-mb-app-pub-4731346788446294-tag/ABIM1");
@@ -47,14 +55,14 @@ public class InterstitalIMABKWActivity extends Activity {
             @Override
             public void onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
-                Toast.makeText(InterstitalIMABKWActivity.this,"IMAB Interstitial preload ready", Toast.LENGTH_LONG).show();
+                Toast.makeText(InterstitalIMABKWActivity.this,"IMAB Interstitial KW preload ready", Toast.LENGTH_LONG).show();
                 interstitialReady = true;
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
 
-                Toast.makeText(InterstitalIMABKWActivity.this,"Interstitial failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(InterstitalIMABKWActivity.this,"Interstitial IMAB KW failed", Toast.LENGTH_LONG).show();
 
                 // Code to be executed when an ad request fails.
 
@@ -84,7 +92,7 @@ public class InterstitalIMABKWActivity extends Activity {
                 // Code to be executed when the interstitial ad is closed.
 
                 // Make a new request on close!
-                preloadIMABInterstitial();
+                preloadIMABKWInterstitial();
 
             }
         });
@@ -95,39 +103,59 @@ public class InterstitalIMABKWActivity extends Activity {
 
 
 
-    public void preloadIMABInterstitial() {
+    public void preloadIMABKWInterstitial() {
 
-        PublisherAdRequest.Builder IMABadRequest = new PublisherAdRequest.Builder().addTestDevice("DBA220EA435766BFB9DFB4CC7B7673A8");
+        IMABKWBadRequest = new PublisherAdRequest.Builder().addTestDevice("DBA220EA435766BFB9DFB4CC7B7673A8");
 
         // Get singleton instance
         IMAudienceBidder inMobiAudienceBidder = IMAudienceBidder.getInstance();
 
-        interstitialBidToken = inMobiAudienceBidder.createBidToken(this, "1064877", IMABadRequest, new IMAudienceBidder.IMAudienceBidderInterstitialListener() {
+        interstitialBidToken = inMobiAudienceBidder.createBidToken(this, "1064877", new IMAudienceBidder.IMAudienceBidderInterstitialKeywordListener() {
+
+
             @Override
-            public void onBidReceived(@NonNull PublisherAdRequest.Builder builder) {
+            public void onBidReceived(IMAudienceBidder.IMABBidResponse imabBidResponse) {
 
                 Toast.makeText(InterstitalIMABKWActivity.this,"IMAb Interstitial onBidReceived", Toast.LENGTH_LONG).show();
 
-                PublisherAdRequest publisherAdRequest = builder.build();
+                // Get other bid information here
+                String bidKeyword = imabBidResponse.getBidKeyword();
+                String bidPrice = String.valueOf(imabBidResponse.getPrice());
+
+                Toast.makeText(InterstitalIMABKWActivity.this, "IMAb Interstitial KW onBidReceived with kw: " + bidKeyword + " and: " + bidPrice, Toast.LENGTH_LONG).show();
+
+                Bundle metadata = new Bundle();
+                metadata.putString(IMAudienceBidder.IMAB_PLACEMENT, "1064877");
+                IMABKWBadRequest.addCustomEventExtrasBundle(IMABCustomEventInterstitial.class, metadata);
+
+                IMABKWBadRequest.addTestDevice("DBA220EA435766BFB9DFB4CC7B7673A8");                    // Test Device ID
+                IMABKWBadRequest.addCustomTargeting(IMAudienceBidder.IMAB_KEY, imabBidResponse.getBidKeyword());
+
+                PublisherAdRequest publisherAdRequest = IMABKWBadRequest.build();
 
                 mPublisherIMABInterstitialAd.loadAd(publisherAdRequest);
+
             }
 
             @Override
-            public void onBidFailed(@NonNull PublisherAdRequest.Builder builder, @NonNull Error error) {
+            public void onBidFailed(Error error) {
 
                 Toast.makeText(InterstitalIMABKWActivity.this,"IMAb Banner onBidFailed", Toast.LENGTH_LONG).show();
 
-                mPublisherIMABInterstitialAd.loadAd(builder.build());
+                mPublisherIMABInterstitialAd.loadAd(IMABKWBadRequest.build());
+
+                IMABKWBadRequest.addTestDevice("DBA220EA435766BFB9DFB4CC7B7673A8");                    // Test Device ID
+                mPublisherIMABInterstitialAd.loadAd(IMABKWBadRequest.build());
 
             }
+
         });
 
         interstitialBidToken.updateBid();
 
     }
 
-    public void showIMABInterstitial() {
+    public void showIMABKWInterstitial() {
 
         if (mPublisherIMABInterstitialAd.isLoaded() && interstitialReady) {
             mPublisherIMABInterstitialAd.show();
